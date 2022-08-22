@@ -30,3 +30,14 @@ main {
   text-transform: uppercase;
   font-size: 2rem;
 }
+
+.letter.true {
+  background-color: green;
+}
+.letter.exists {
+  background-color: yellow;
+}
+
+.letter.false {
+  background-color: grey;
+}

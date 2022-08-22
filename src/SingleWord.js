@@ -5,7 +5,7 @@ export const SingleWord = ({ guess }) => {
   return (
     <div className="word">
       {guess.text.map((item, i) => (
-        <SingleLetter key={i} letter={item} />
+        <SingleLetter key={i} letter={item} checked={guess.checked} no={i} />
       ))}
     </div>
   );

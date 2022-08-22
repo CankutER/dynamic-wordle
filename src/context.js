@@ -8,7 +8,11 @@ export const AppProvider = ({ children }) => {
   const [guessNo, setguessNo] = useState(0);
   const [guesses, setGuesses] = useState(
     solution.split("").map((letter, i) => {
-      return { id: i, text: new Array(solution.length).fill("") };
+      return {
+        id: i,
+        text: new Array(solution.length).fill(""),
+        checked: false,
+      };
     })
   );
   const [typedNo, setTypedNo] = useState(0);
@@ -19,16 +23,28 @@ export const AppProvider = ({ children }) => {
     // });
     // setGuesses(initGuesses);
     function write(e) {
-      console.log(typedNo);
-      if (String(e.key).match(/[a-z]/i) && typedNo <= solution.length - 1) {
+      if (
+        String(e.key).length === 1 &&
+        String(e.key).match(/[a-z]/i) &&
+        typedNo <= solution.length - 1
+      ) {
         setGuesses((guesses) => {
           let temp = [...guesses];
-          console.log(temp);
+
           temp[guessNo].text[typedNo] = e.key;
           return temp;
         });
 
         setTypedNo((typedNo) => typedNo + 1);
+      }
+      if (e.key === "Enter") {
+        if (guesses[guessNo].text.join("").length !== solution.length) {
+          alert("Please fill all the boxes");
+        } else {
+          let temp = [...guesses];
+          temp[guessNo].checked = true;
+          setGuesses(temp);
+        }
       }
     }
 
