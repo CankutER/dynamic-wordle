@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-
 const AppContext = React.createContext();
 
 export const AppProvider = ({ children }) => {
-  const [solution, setSolution] = useState("abcde");
+  console.log("rendered");
+  const [solution, setSolution] = useState("cankut");
 
-  const [guessNo, setguessNo] = useState(0);
+  const [guessNo, setGuessNo] = useState(0);
   const [guesses, setGuesses] = useState(
     solution.split("").map((letter, i) => {
       return {
@@ -44,13 +44,27 @@ export const AppProvider = ({ children }) => {
           let temp = [...guesses];
           temp[guessNo].checked = true;
           setGuesses(temp);
+          setGuessNo(guessNo + 1);
+          setTypedNo(0);
+        }
+      }
+      if (e.key === "Backspace") {
+        if (typedNo > 0) {
+          setGuesses((guesses) => {
+            console.log(typedNo);
+            let temp = [...guesses];
+
+            temp[guessNo].text[typedNo - 1] = "";
+            return temp;
+          });
+          setTypedNo((prev) => prev - 1);
         }
       }
     }
 
-    window.addEventListener("keypress", write);
+    window.addEventListener("keyup", write);
     return () => {
-      window.removeEventListener("keypress", write);
+      window.removeEventListener("keyup", write);
     };
   }, [typedNo, guessNo]);
   return (
