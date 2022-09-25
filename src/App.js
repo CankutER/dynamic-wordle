@@ -4,25 +4,32 @@ function App() {
   const context = useGlobalContext();
   return (
     <main>
-      <div className="forbidden-letters">
-        <h3>Letters that are not in the secret word</h3>
-        <div className="letter-container">
-          {Array.from(context.trash).map((letter, i) => {
-            return (
-              <div className="forbidden-letter" key={i}>
-                {letter}
-              </div>
-            );
-          })}
+      <section className="used-section">
+        <div className="forbidden-letters">
+          <h3>DISQUALIFIED LETTERS</h3>
+          <div className="letter-container">
+            {Array.from(context.trash).map((letter, i) => {
+              return (
+                <div className="forbidden-letter" key={i}>
+                  {letter}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <header>
-        <h1 className="title">Wordle on React</h1>
-      </header>
-      <section className="words">
-        {context.guesses.map((item) => (
-          <SingleWord key={item.id} guess={item} />
-        ))}
+      </section>
+      <section className="board-section">
+        <header>
+          <h1 className="title">DYNAMIC WORDLE</h1>
+          <h4 className={`error-msg ${context.error ? "show-error" : null}`}>
+            {context.errorMsg}
+          </h4>
+        </header>
+        <section className="words">
+          {context.guesses.map((item) => (
+            <SingleWord key={item.id} guess={item} />
+          ))}
+        </section>
       </section>
     </main>
   );

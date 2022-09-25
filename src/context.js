@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 const AppContext = React.createContext();
-
+const baseUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 export const AppProvider = ({ children }) => {
-  const [solution, setSolution] = useState("cankut");
+  const [solution, setSolution] = useState("surprise");
   const [guessNo, setGuessNo] = useState(0);
+  const [error, setError] = useState("");
+  const [isError, setIsError] = useState(false);
   const [guesses, setGuesses] = useState(
     solution.split("").map((letter, i) => {
       return {
@@ -16,8 +18,22 @@ export const AppProvider = ({ children }) => {
   const [typedNo, setTypedNo] = useState(0);
   const [trash, setTrash] = useState(new Set());
 
+  const checkWord = async (url) => {
+    try {
+      const response = await fetch(url);
+      console.log(response);
+      if (!response.ok) {
+        return "Please use a valid English word";
+      }
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      return err;
+    }
+  };
+
   useEffect(() => {
-    function write(e) {
+    async function write(e) {
       if (
         String(e.key).length === 1 &&
         String(e.key).match(/[a-z]/i) &&
@@ -35,29 +51,39 @@ export const AppProvider = ({ children }) => {
         }
       }
       if (e.key === "Enter") {
+        window.removeEventListener("keyup", write);
         if (guesses[guessNo].text.join("").length !== solution.length) {
-          alert("Please fill all the boxes");
+          setIsError(true);
+          setError("please fill all the boxes");
         } else {
-          let temp = [...guesses];
-          temp[guessNo].checked = true;
-          setGuesses(temp);
-          setGuessNo(guessNo + 1);
-          setTypedNo(0);
-        }
-        guesses[guessNo].text.forEach((letter, i) => {
-          if (!solution.includes(letter)) {
-            setTrash((trash) => {
-              trash.add(letter);
-              return trash;
+          const toBeChecked = guesses[guessNo].text.join("");
+          const checkData = await checkWord(baseUrl + toBeChecked);
+          console.log(checkData);
+          if (checkData[0].word) {
+            let temp = [...guesses];
+            temp[guessNo].checked = true;
+            setGuesses(temp);
+            setGuessNo(guessNo + 1);
+            setTypedNo(0);
+            guesses[guessNo].text.forEach((letter, i) => {
+              if (!solution.includes(letter)) {
+                setTrash((trash) => {
+                  trash.add(letter);
+                  return trash;
+                });
+              }
             });
+          } else {
+            setIsError(true);
+            setError("please try a valid word");
           }
-        });
+        }
+        window.addEventListener("keyup", write);
       }
 
       if (e.key === "Backspace") {
         if (typedNo > 0) {
           setGuesses((guesses) => {
-            console.log(typedNo);
             let temp = [...guesses];
 
             temp[guessNo].text[typedNo - 1] = "";
@@ -73,9 +99,26 @@ export const AppProvider = ({ children }) => {
       window.removeEventListener("keyup", write);
     };
   }, [typedNo, guessNo]);
+  useEffect(() => {
+    console.log(isError);
+    if (isError) {
+      const timer = setTimeout(() => {
+        setIsError(false);
+      }, 2000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [isError]);
   return (
     <AppContext.Provider
-      value={{ solution: solution.split(""), guesses: guesses, trash: trash }}
+      value={{
+        solution: solution.split(""),
+        guesses: guesses,
+        trash: trash,
+        error: isError,
+        errorMsg: error,
+      }}
     >
       {children}
     </AppContext.Provider>
