@@ -21,7 +21,7 @@ export const AppProvider = ({ children }) => {
   const checkWord = async (url) => {
     try {
       const response = await fetch(url);
-      console.log(response);
+
       if (!response.ok) {
         return "Please use a valid English word";
       }
@@ -58,13 +58,20 @@ export const AppProvider = ({ children }) => {
         } else {
           const toBeChecked = guesses[guessNo].text.join("");
           const checkData = await checkWord(baseUrl + toBeChecked);
-          console.log(checkData);
+
           if (checkData[0].word) {
+            // console.log(guesses[guessNo].text.join("").toLowerCase);
             let temp = [...guesses];
             temp[guessNo].checked = true;
             setGuesses(temp);
             setGuessNo(guessNo + 1);
             setTypedNo(0);
+            if (guesses[guessNo].text.join("").toLowerCase() === solution) {
+              console.log("hey");
+              setIsError(true);
+              setError("GRATZZZ!!! YOU HAVE WON!!!");
+              setTypedNo(Infinity);
+            }
             guesses[guessNo].text.forEach((letter, i) => {
               if (!solution.includes(letter)) {
                 setTrash((trash) => {
@@ -100,8 +107,7 @@ export const AppProvider = ({ children }) => {
     };
   }, [typedNo, guessNo]);
   useEffect(() => {
-    console.log(isError);
-    if (isError) {
+    if (isError && error !== "GRATZZZ!!! YOU HAVE WON!!!") {
       const timer = setTimeout(() => {
         setIsError(false);
       }, 2000);

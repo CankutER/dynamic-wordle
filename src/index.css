@@ -6,7 +6,15 @@
   box-sizing: border-box;
 }
 
+:root {
+  --background-white: #fbfaf5;
+  --textnborder-clr: #3d2b1f;
+}
 /* Header */
+body {
+  background-color: var(--background-white);
+  color: var(--textnborder-clr);
+}
 main {
   height: 100vh;
   width: 90vw;
@@ -16,9 +24,11 @@ main {
   grid-template-rows: 2fr 8fr;
   place-items: center;
 }
-
+h1 {
+  letter-spacing: 0.1rem;
+}
 .forbidden-letter {
-  border: 0.5px solid black;
+  border: 0.5px solid var(--textnborder-clr);
   padding: 0.2rem;
   font-size: 1rem;
   text-transform: uppercase;
@@ -35,30 +45,32 @@ main {
 .letter {
   height: 2.5rem;
   width: 2.5rem;
-  border: 1px solid black;
+  border: 1px solid var(--textnborder-clr);
   display: flex;
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
   font-size: 1.5rem;
+  color: #1d0f0f;
+  transition: background-color 0.5s linear;
 }
 
 .letter.true {
-  background-color: green;
+  background-color: #17b169;
 }
 .letter.exists {
-  background-color: yellow;
+  background-color: #ffe135;
 }
 
 .letter.false {
-  background-color: grey;
+  background-color: #787878;
 }
 
 .board-section {
   display: grid;
-  grid-template-rows: auto 9fr;
+  grid-template-rows: auto 1fr;
   gap: 0.5rem;
-  align-items: center;
+  place-items: center;
   text-align: center;
 }
 .words {
@@ -67,6 +79,7 @@ main {
 }
 h3 {
   margin-bottom: 0.2rem;
+  letter-spacing: 0.075rem;
 }
 header {
   align-self: flex-end;
@@ -83,4 +96,25 @@ header {
 }
 .show-error {
   visibility: visible;
+}
+
+@media screen and (max-width: 500px) {
+  .letter {
+    height: 2rem;
+    width: 2rem;
+    font-size: 1.25rem;
+  }
+}
+@media screen and (max-width: 300px) {
+  .letter {
+    height: 1.5rem;
+    width: 1.5rem;
+    font-size: 1rem;
+  }
+  main h1 {
+    font-size: 1.35rem;
+  }
+  main h3 {
+    font-size: 1.1rem;
+  }
 }
