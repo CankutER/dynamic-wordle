@@ -56,6 +56,7 @@ export const AppProvider = ({ children }) => {
           guesses[guessNo].text.join("").length !== solution.length &&
           error !== "GRATZZZ!!! YOU HAVE WON!!!"
         ) {
+          console.log(error);
           setIsError(true);
           setError("please fill all the boxes");
         } else {
@@ -70,7 +71,6 @@ export const AppProvider = ({ children }) => {
             setGuessNo(guessNo + 1);
             setTypedNo(0);
             if (guesses[guessNo].text.join("").toLowerCase() === solution) {
-              console.log("hey");
               setIsError(true);
               setError("GRATZZZ!!! YOU HAVE WON!!!");
               setTypedNo(Infinity);
@@ -83,7 +83,7 @@ export const AppProvider = ({ children }) => {
                 });
               }
             });
-          } else {
+          } else if (error !== "GRATZZZ!!! YOU HAVE WON!!!") {
             setIsError(true);
             setError("please try a valid word");
           }
