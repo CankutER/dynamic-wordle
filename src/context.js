@@ -52,7 +52,10 @@ export const AppProvider = ({ children }) => {
       }
       if (e.key === "Enter") {
         window.removeEventListener("keyup", write);
-        if (guesses[guessNo].text.join("").length !== solution.length) {
+        if (
+          guesses[guessNo].text.join("").length !== solution.length &&
+          error !== "GRATZZZ!!! YOU HAVE WON!!!"
+        ) {
           setIsError(true);
           setError("please fill all the boxes");
         } else {
